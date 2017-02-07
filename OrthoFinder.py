@@ -17,11 +17,13 @@ parser.add_argument('-g','--gene',type=str,help='Gene of interest (case insensit
 parser.add_argument('-c','--cores',type=int,help='Number of cores to use (default=1)')
 parser.add_argument('-o','--outfile',type=str,help='Output file name')
 parser.add_argument('-d','--domains',type=str,help='Domains to screen hits on (only hits containing all domains will be retained)')
+parser.add_argument('--noblast',help="Use existing all vs all blast databases",action="store_true")
 args=parser.parse_args()
 #default arguments
 Evalue=0.1
 Cores=1
 Domains=[]
+NoBLAST=False
 #reference fasta parsing
 if args.reference is not None:
 	ReferenceFasta=args.reference
@@ -76,20 +78,31 @@ if args.domains is not None:
 		print(args.domains.split(',')[i])
 else:
 	print("No domain screening specified")
-#make new directory to hold blast databases, outputs and results
-if os.path.isdir("OrthoFinder") is True:
-	shutil.rmtree("OrthoFinder")
-	print("Old OrthoFinder directory removed") 
-os.mkdir("OrthoFinder")
-#build DIAMOND blast databases for query & reference protein sets
-cmd="diamond makedb --in " + QueryFasta + " -d ./OrthoFinder/Query"
-subprocess.call(cmd,shell=True)
-cmd="diamond makedb --in " + ReferenceFasta + " -d ./OrthoFinder/Reference"
-subprocess.call(cmd,shell=True)
-print("BLAST databases written for query and reference")
-#blastp reference using query
-cmd="diamond blastp -p " + str(Cores) + " -d ./OrthoFinder/Reference -q " + QueryFasta + " -o ./OrthoFinder/QueryOnReference.out -f 6 qseqid evalue length sseqid -e " + str(Evalue) + " --max-target-seqs 1 --more-sensitive"
-subprocess.call(cmd,shell=True)
+#noblast parsing
+if args.noblast:
+	NoBLAST=True
+	print("Using existing BLAST databases")
+else:
+	print("Creating new BLAST databases")
+
+if NoBLAST==False:
+	#make new directory to hold blast databases, outputs and results
+	if os.path.isdir("OrthoFinder") is True:
+		shutil.rmtree("OrthoFinder")
+		print("Old OrthoFinder directory removed") 
+	os.mkdir("OrthoFinder")
+	#build DIAMOND blast databases for query & reference protein sets
+	cmd="diamond makedb --in " + QueryFasta + " -d ./OrthoFinder/Query"
+	subprocess.call(cmd,shell=True)
+	cmd="diamond makedb --in " + ReferenceFasta + " -d ./OrthoFinder/Reference"
+	subprocess.call(cmd,shell=True)
+	print("BLAST databases written for query and reference")
+	#blastp reference using query
+	cmd="diamond blastp -p " + str(Cores) + " -d ./OrthoFinder/Reference -q " + QueryFasta + " -o ./OrthoFinder/QueryOnReference.out -f 6 qseqid evalue length sseqid -e " + str(Evalue) + " --max-target-seqs 1 --more-sensitive"
+	subprocess.call(cmd,shell=True)
+	#blastp query using reference
+	cmd="diamond blastp -p " + str(Cores) + " -d ./OrthoFinder/Query -q " + ReferenceFasta + " -o ./OrthoFinder/ReferenceOnQuery.out -f 6 qseqid evalue length sseqid -e " + str(Evalue) + " --max-target-seqs 1 --more-sensitive"
+	subprocess.call(cmd,shell=True)
 #collect top hits to reference for each query sequence
 QueryOnRef = {}
 for line in open('./OrthoFinder/QueryOnReference.out','r'):
@@ -105,9 +118,6 @@ for i in QueryOnRef:
 	if re.search(Gene,QueryOnRef[i],flags=re.IGNORECASE):
 		QueryOnRefHits.append(i)
 		QueryOnRefOrtho.append(Gene)
-#blastp query using reference
-cmd="diamond blastp -p " + str(Cores) + " -d ./OrthoFinder/Query -q " + ReferenceFasta + " -o ./OrthoFinder/ReferenceOnQuery.out -f 6 qseqid evalue length sseqid -e " + str(Evalue) + " --max-target-seqs 1 --more-sensitive"
-subprocess.call(cmd,shell=True)
 #collect top hits to query for each reference sequence
 RefOnQuery = {}
 for line in open('./OrthoFinder/ReferenceOnQuery.out','r'):
@@ -154,7 +164,7 @@ if not len(nrHits)==len(nrOrtho)==len(nrSeqs):
 Ortho=[]
 for i in range(len(nrHits)):
 	Ortho.append(nrOrtho[i]+'_'+nrHits[i])
-print('QueryOnRefHits (' + str(len(QueryOnRefHits)) + ' entries) & RefOnQueryHits (' + str(len(RefOnQueryHits)) + ' entries) combined into Ortho (' + str(len(Ortho)) + ' entries):')
+print('QueryOnRefHits (' + str(len(QueryOnRefHits)) + ' entries) & RefOnQueryHits (' + str(len(RefOnQueryHits)) + ' entries) combined into Ortho (' + str(len(Ortho)) + ' entries)')
 OrthoFasta = ''
 for i in range(len(nrHits)):
 	templine = '>' + Ortho[i] + '\n' + str(nrSeqs[i]) + '\n'
@@ -181,8 +191,7 @@ else:
 	#screen for presence of domains of interest
 	OrthoVerified = []
 	OrthoVerifiedSeqs = []
-	for i in range(len(Ortho)):
-		print("Domains for " + Ortho[i] + ":\n" + str(OrthoDomains[i]))
+	for i in range(len(Ortho)):	
 		for orthodomain in OrthoDomains[i]:
 			domaincount = 0
 			for domain in Domains:
@@ -197,7 +206,8 @@ else:
 	for i in range(len(OrthoVerified)):
 		templine = '>' + OrthoVerified[i] + '\n' + str(OrthoVerifiedSeqs[i]) + '\n'
 	OrthoVerifiedFasta += templine
-	output = open(OutFile+'_verified.fasta',"wt")
+	output = open("./OrthoFinder/" + OutFile + '_verified.fasta',"wt")
 	output.write(OrthoVerifiedFasta)
 	output.close()
+	print("Verified orthologues written to ./OrthoFinder/"+OutFile+"_verified.fasta")
 
