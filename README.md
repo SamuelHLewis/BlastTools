@@ -38,6 +38,8 @@ OrthoFinder takes five mandatory arguments:
 
 -o (basename of output file)
 
-OrthoFinder takes one optional argument:
+OrthoFinder takes two optional argument:
 
 -c (number of threads to run analysis on, default=1)
+
+--noblast (use existing blast databases to query a new gene of interest)
