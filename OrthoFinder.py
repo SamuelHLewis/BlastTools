@@ -42,8 +42,8 @@ else:
 if args.evalue is None:
 	print("Using default e-value ("+str(Evalue)+")")
 else:
-	if int(args.evalue) > 0:
-		Evalue=int(args.evalue)
+	if float(args.evalue) > 0:
+		Evalue=float(args.evalue)
 		print("e-value set to "+str(Evalue))
 	else:
 		print("ERROR: e-value (-e) must be > 0")
