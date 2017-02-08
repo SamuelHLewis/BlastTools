@@ -187,20 +187,21 @@ else:
 		for line in open("./OrthoFinder/" + OutFile + ".fasta.tsv"):
 			if hit in line:
 				tempdomains.append(line.split('\t')[5])
-		OrthoDomains.append(tempdomains)
-	#screen for presence of domains of interest
+		OrthoDomains.append(tempdomains)	
+	#identify which hits have the domains of interest
 	OrthoVerified = []
 	OrthoVerifiedSeqs = []
-	for i in range(len(Ortho)):	
+	for i in range(len(Ortho)):
+		#count of domains found in this hit
+		match=0
 		for orthodomain in OrthoDomains[i]:
-			domaincount = 0
 			for domain in Domains:
-				if re.search(domain,orthodomain,flags=re.IGNORECASE):
-					domaincount+=1
-			if domaincount==len(Domains):
-				print("All domains found in " + Ortho[i])
-				OrthoVerified.append(Ortho[i])
-				OrthoVerifiedSeqs.append(nrSeqs[i])
+				if re.search(domain,orthodomain,flags=re.IGNORECASE):	
+					match+=1
+		if match>0:
+			OrthoVerified.append(Ortho[i])
+			OrthoVerifiedSeqs.append(nrSeqs[i])
+			print(Ortho[i] + " added to verified list")
 	#output fasta of domain-verified hits
 	OrthoVerifiedFasta = ''
 	for i in range(len(OrthoVerified)):
