@@ -187,7 +187,8 @@ else:
 		for line in open("./OrthoFinder/" + OutFile + ".fasta.tsv"):
 			if hit in line:
 				tempdomains.append(line.split('\t')[5])
-		OrthoDomains.append(tempdomains)	
+		OrthoDomains.append(tempdomains)
+		print("Domains in " + hit + ":\n" + str(tempdomains))	
 	#identify which hits have the domains of interest
 	OrthoVerified = []
 	OrthoVerifiedSeqs = []
@@ -206,7 +207,7 @@ else:
 	OrthoVerifiedFasta = ''
 	for i in range(len(OrthoVerified)):
 		templine = '>' + OrthoVerified[i] + '\n' + str(OrthoVerifiedSeqs[i]) + '\n'
-	OrthoVerifiedFasta += templine
+		OrthoVerifiedFasta += templine
 	output = open("./OrthoFinder/" + OutFile + '_verified.fasta',"wt")
 	output.write(OrthoVerifiedFasta)
 	output.close()
