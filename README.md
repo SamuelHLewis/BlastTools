@@ -38,8 +38,34 @@ OrthoFinder takes five mandatory arguments:
 
 -o (basename of output file)
 
-OrthoFinder takes two optional argument:
+OrthoFinder takes two optional arguments:
 
 -c (number of threads to run analysis on, default=1)
 
 --noblast (use existing blast databases to query a new gene of interest)
+
+## ConservedOrthoFinder
+Finds orthologues that are conserved as single copies across a number of protein sets, based on similarity to a reference set of proteins. Outputs separate fasta files for each single-copy orthologue found, and a fasta file (Concatenated.fasta) of all single-copy orthologues concatenated together (in the same order) for each protein set.
+
+Written in python3.
+
+Basic usage is:
+```bash
+ConservedOrthoFinder -r reference.fasta -i input1.fasta,input2.fasta -d directory1,directory2 -o output1,output2
+```
+ConservedOrthoFinder takes four mandatory arguments:
+
+-r (reference protein set in fasta format)
+
+-i (comma-separated list of query protein sets in fasta format)
+
+-d (comma-separated list of working directories)
+
+-o (comma-separated list of output filename stems)
+
+ConservedOrthoFinder takes two optional arguments:
+
+-c (number of threads to run analysis on, default=1)
+
+-e (E-value for BLAST, default=0.001)
+
