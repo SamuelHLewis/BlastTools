@@ -12,9 +12,9 @@ ExtractCDS -i input.fas -o nucleotide
 ```
 ExtractCDS takes two arguments (both of which are mandatory):
 
--i (input fasta file)
+	+ -i (input fasta file)
 
--o (output fasta format: nucleotide or protein)
+	+ -o (output fasta format: nucleotide or protein)
 
 NB: fasta file names MUST be in the form '>LabelX LabelY CDS=1-90', where the last space-delimited name element contains the coordinates of the CDS preceded by 'CDS=' (as output by gffread)
 ## OrthoFinder
