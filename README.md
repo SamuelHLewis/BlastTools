@@ -8,7 +8,7 @@ Written in python3.
 
 Dependencies:
 
-	[biopython](https://github.com/biopython/biopython.github.io/)
+[biopython](https://github.com/biopython/biopython.github.io/)
 
 Basic usage is:
 ```bash
