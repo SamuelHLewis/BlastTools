@@ -26,6 +26,14 @@ Finds orthologues in a query set of proteins, based on similarity to a reference
 
 Written in python3.
 
+Dependencies (all of which must be in path):
+
+[biopython](https://github.com/biopython/biopython.github.io/)
+
+[DIAMOND](https://github.com/bbuchfink/diamond)
+
+[InterProScan](https://github.com/ebi-pf-team/interproscan)
+
 Basic usage is:
 ```bash
 OrthoFinder -r reference.fasta -q query.fasta -g gene1 -d domain1 -o outputname
@@ -52,6 +60,12 @@ OrthoFinder takes two optional arguments:
 Finds orthologues that are conserved as single copies across a number of protein sets, based on similarity to a reference set of proteins. Outputs separate fasta files for each single-copy orthologue found, and a fasta file (Concatenated.fasta) of all single-copy orthologues concatenated together (in the same order) for each protein set.
 
 Written in python3.
+
+Dependencies (all of which must be in path):
+
+[biopython](https://github.com/biopython/biopython.github.io/)
+
+[DIAMOND](https://github.com/bbuchfink/diamond)
 
 Basic usage is:
 ```bash
