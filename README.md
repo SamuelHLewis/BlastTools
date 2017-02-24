@@ -6,6 +6,10 @@ Extracts CDS sections of sequences.
 
 Written in python3.  
 
+Dependencies:
+
+	[biopython](https://github.com/biopython/biopython.github.io/)
+
 Basic usage is:
 ```bash
 ExtractCDS -i input.fas -o nucleotide
@@ -28,21 +32,21 @@ OrthoFinder -r reference.fasta -q query.fasta -g gene1 -d domain1 -o outputname
 ```
 OrthoFinder takes five mandatory arguments:
 
--r (reference protein set in fasta format)
+	-r (reference protein set in fasta format)
 
--q (query protein set in fasta format)
+	-q (query protein set in fasta format)
 
--g (gene of interest)
+	-g (gene of interest)
 
--d (domain to screen potential orthologues on)
+	-d (domain to screen potential orthologues on)
 
--o (basename of output file)
+	-o (basename of output file)
 
 OrthoFinder takes two optional arguments:
 
--c (number of threads to run analysis on, default=1)
+	-c (number of threads to run analysis on, default=1)
 
---noblast (use existing blast databases to query a new gene of interest)
+	--noblast (use existing blast databases to query a new gene of interest)
 
 ## ConservedOrthoFinder
 Finds orthologues that are conserved as single copies across a number of protein sets, based on similarity to a reference set of proteins. Outputs separate fasta files for each single-copy orthologue found, and a fasta file (Concatenated.fasta) of all single-copy orthologues concatenated together (in the same order) for each protein set.
@@ -55,17 +59,17 @@ ConservedOrthoFinder -r reference.fasta -i input1.fasta,input2.fasta -d director
 ```
 ConservedOrthoFinder takes four mandatory arguments:
 
--r (reference protein set in fasta format)
+	-r (reference protein set in fasta format)
 
--i (comma-separated list of query protein sets in fasta format)
+	-i (comma-separated list of query protein sets in fasta format)
 
--d (comma-separated list of working directories)
+	-d (comma-separated list of working directories)
 
--o (comma-separated list of output filename stems)
+	-o (comma-separated list of output filename stems)
 
 ConservedOrthoFinder takes two optional arguments:
 
--c (number of threads to run analysis on, default=1)
+	-c (number of threads to run analysis on, default=1)
 
--e (E-value for BLAST, default=0.001)
+	-e (E-value for BLAST, default=0.001)
 
