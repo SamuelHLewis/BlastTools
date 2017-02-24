@@ -12,7 +12,7 @@ Dependencies:
 
 Basic usage is:
 ```bash
-ExtractCDS -i input.fas -o nucleotide
+ExtractCDS.py -i input.fas -o nucleotide
 ```
 ExtractCDS takes two arguments (both of which are mandatory):
 
@@ -36,7 +36,7 @@ Dependencies (all of which must be in path):
 
 Basic usage is:
 ```bash
-OrthoFinder -r reference.fasta -q query.fasta -g gene1 -d domain1 -o outputname
+OrthoFinder.py -r reference.fasta -q query.fasta -g gene1 -d domain1 -o outputname
 ```
 OrthoFinder takes five mandatory arguments:
 
@@ -69,7 +69,7 @@ Dependencies (all of which must be in path):
 
 Basic usage is:
 ```bash
-ConservedOrthoFinder -r reference.fasta -i input1.fasta,input2.fasta -d directory1,directory2 -o output1,output2
+ConservedOrthoFinder.py -r reference.fasta -i input1.fasta,input2.fasta -d directory1,directory2 -o output1,output2
 ```
 ConservedOrthoFinder takes four mandatory arguments:
 
